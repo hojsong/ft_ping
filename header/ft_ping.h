@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netinet/ip.h>
 #include <netinet/ip_icmp.h>
 #include <arpa/inet.h>
 #include <sys/time.h>
@@ -22,9 +23,11 @@
 
 void            process_end();
 void            signal_handler(int signum);
-int             validate_domain_name(const char *domainName);
 void            ft_printOptional(struct addrinfo *res);
-void            ft_rate(unsigned long long total, unsigned long long suc, struct timeval *total_time);
+void            ft_rate();
+
+int             validate_domain_name(const char *domainName);
+void	        *ft_memset(void *b, int c, size_t len);
 int             ft_strcmp(char *str, char *opt);
 int             optional(char *str, char *opt);
 void            fill_icmp_packet(struct icmp *icmp_hdr, int sequence);

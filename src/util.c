@@ -1,11 +1,22 @@
 #include "../header/ft_ping.h"
 
-struct addrinfo *g_res;
-struct timeval total_time, program_start;
-unsigned long long total, suc;
-int   closefd, ac;
-char  **av;
-double *save_times;
+extern struct addrinfo *g_res;
+extern struct timeval total_time, program_start;
+extern unsigned long long total, suc;
+extern int   closefd, ac;
+extern char  **av;
+extern double *save_times;
+
+void	*ft_memset(void *b, int c, size_t len){
+	size_t			i;
+	unsigned char	*st;
+
+	i = 0;
+	st = (unsigned char *)b;
+	while (i < len)
+		st[i++] = (unsigned char)c;
+	return (st);
+}
 
 int validate_domain_name(const char *domainName) {
     int i;
@@ -63,9 +74,8 @@ int time_stamp(struct timeval start, struct timeval end, struct timeval *total){
       total->tv_sec += total->tv_usec / 1000000;
       total->tv_usec %= 1000000;
     }
-    printf(" RTT : %.2f/ms |", ptime);
+    printf(" RTT : %.2f/ms", ptime);
     i = 0;
-    printf("1");
     reset = malloc(sizeof(double) * suc);
     while(i + 1 < suc){
       reset[i] = save_times[i];

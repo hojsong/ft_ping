@@ -24,18 +24,19 @@ int main(int argc, char **argv) {
     struct iovec iov[1];
     char recv_buffer[PACKET_SIZE];
     struct timeval time_start, time_end, tv;
+    char *ipstr;
     
     //init
     {
-      memset(&addr, 0, sizeof(addr));
-      addr.ai_family = AF_UNSPEC; // IPv4를 위해
+      ft_memset(&addr, 0, sizeof(addr));
+      addr.ai_family = AF_UNSPEC;
       addr.ai_socktype = SOCK_RAW;
       addr.ai_protocol = IPPROTO_ICMP;
       tv.tv_sec = 1;
       tv.tv_usec = 0;
       total_time.tv_sec = 0;
       total_time.tv_usec = 0;
-      memset(&msg, 0, sizeof(msg));
+      ft_memset(&msg, 0, sizeof(msg));
       iov[0].iov_base = recv_buffer;
       iov[0].iov_len = sizeof(recv_buffer);
       msg.msg_iov = iov;
@@ -43,9 +44,8 @@ int main(int argc, char **argv) {
       ac = argc;
       av = argv;
     }
-    //get address info
     {
-      if (getaddrinfo(argv[argc - 1], "http", &addr, &res) != 0) {
+      if (getaddrinfo(argv[argc - 1], 0, &addr, &res) != 0) {
           printf("getaddrinfo Failed : Undefined Url or Ip address.\n");
           exit(EXIT_FAILURE);
       }
@@ -70,6 +70,19 @@ int main(int argc, char **argv) {
       g_res = res;
       total = 0;
       suc = 0;
+      if (res->ai_family == AF_INET) {
+        char ipstr4[INET_ADDRSTRLEN];
+        struct sockaddr_in *ipv4 = (struct sockaddr_in *)res->ai_addr;
+        inet_ntop(res->ai_family, &(ipv4->sin_addr), ipstr4, sizeof ipstr4);
+        ipstr = ipstr4;
+      } else if (res->ai_family == AF_INET6) {
+        char ipstr6[INET6_ADDRSTRLEN];
+        struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)res->ai_addr;
+        inet_ntop(res->ai_family, &(ipv6->sin6_addr), ipstr6, sizeof ipstr6);
+        ipstr = ipstr6;
+      }
+
+      printf("The IP address is: %s\n", ipstr);
     }
     {
       signal(SIGINT, signal_handler);
@@ -86,7 +99,9 @@ int main(int argc, char **argv) {
         else {
           suc++;
           gettimeofday(&time_end, NULL);
-          printf("url : %s |", argv[argc - 1]);
+          struct iphdr *ip_hdr = (struct iphdr*)recv_buffer;
+          // printf("%ld byte from %s (%s): icmp_seq=%lld ttl=%d",sizeof(icmp_packet), ipstr, argv[argc - 1], total, ip_hdr->ttl);
+          printf("%ld byte from %s (%s): icmp_seq=%d ttl=%d",sizeof(icmp_packet), ipstr, argv[argc - 1], icmp_hdr->icmp_seq, ip_hdr->ttl);
           time_stamp(time_start, time_end, &total_time);
           printf("\n");
         }

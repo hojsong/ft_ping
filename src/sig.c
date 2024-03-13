@@ -1,11 +1,11 @@
 #include "../header/ft_ping.h"
 
-struct addrinfo *g_res;
-struct timeval total_time, program_start;
-unsigned long long total, suc;
-int   closefd, ac;
-char  **av;
-double *save_times;
+extern struct addrinfo *g_res;
+extern struct timeval total_time, program_start;
+extern unsigned long long total, suc;
+extern int   closefd, ac;
+extern char  **av;
+extern double *save_times;
 
 void ft_printOptional(struct addrinfo *res){
   struct addrinfo *p;
@@ -34,7 +34,7 @@ void process_end(){
     printf("--- Ping End url : %s ---\n", av[ac - 1]);
     if (ac == 3 && ft_strcmp(av[1], "-v") == 0){
         ft_printOptional(g_res);
-        ft_rate(total, suc, &total_time);
+        ft_rate();
     }
     freeaddrinfo(g_res);
     exit(0);
