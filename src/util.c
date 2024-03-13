@@ -68,7 +68,7 @@ int time_stamp(struct timeval start, struct timeval end, struct timeval *total){
     value = (end.tv_sec - start.tv_sec) * 1000000;
     value += (end.tv_usec - start.tv_usec);
     ptime = (double)value / 1000;
-    printf(" time %.2f/ms", ptime);
+    printf(" time %.3f/ms", ptime);
     if(total != NULL){
       total->tv_sec += value / 1000000;
       total->tv_usec += value % 1000000;
@@ -98,8 +98,8 @@ void fill_icmp_packet(struct icmp *icmp_hdr, int sequence) {
     icmp_hdr->icmp_seq = htons(sequence);
     memset(icmp_hdr->icmp_data, 0xA5, PACKET_SIZE - sizeof(struct icmp));
     gettimeofday((struct timeval *)icmp_hdr->icmp_data, NULL);
-    icmp_hdr->icmp_cksum = 0; // 체크섬 계산 전 0으로 초기화
-    icmp_hdr->icmp_cksum = checksum((unsigned short *)icmp_hdr, PACKET_SIZE); // 체크섬 계산
+    icmp_hdr->icmp_cksum = 0;
+    icmp_hdr->icmp_cksum = checksum((unsigned short *)icmp_hdr, PACKET_SIZE);
 }
 
 unsigned short checksum(unsigned short *paddress, int len)

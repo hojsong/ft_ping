@@ -25,13 +25,11 @@ int main(int argc, char **argv) {
     char recv_buffer[PACKET_SIZE];
     struct timeval time_start, time_end, tv;
     char *ipstr;
-    char *ipv6str;
     int delay;
     
     //init
     {
       ft_memset(&addr, 0, sizeof(addr));
-      addr.ai_family = AF_INET6;
       addr.ai_family = AF_UNSPEC;
       addr.ai_socktype = SOCK_RAW;
       addr.ai_protocol = IPPROTO_ICMP;
@@ -84,12 +82,7 @@ int main(int argc, char **argv) {
         inet_ntop(res->ai_family, &(ipv6->sin6_addr), ipstr6, sizeof ipstr6);
         ipstr = ipstr6;
       }
-      if (ac == 3 && ft_strcmp(av[1], "-v") == 0){
-        char ipstr6[INET6_ADDRSTRLEN];
-        struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)res->ai_addr;
-        inet_ntop(res->ai_family, &(ipv6->sin6_addr), ipstr6, sizeof ipstr6);
-        ipv6str = ipstr6;
-      }
+
 
       printf("The IP address is: %s\n", ipstr);
     }
@@ -111,10 +104,7 @@ int main(int argc, char **argv) {
           suc++;
           gettimeofday(&time_end, NULL);
           struct iphdr *ip_hdr = (struct iphdr*)recv_buffer;
-          if (ac == 3 && ft_strcmp(av[1], "-v") == 0)
-            printf("%ld byte from %s (%s): icmp_seq=%lld ttl=%d",sizeof(icmp_packet), ipv6str, ipstr, total, ip_hdr->ttl);
-          else
-            printf("%ld byte from %s (%s): icmp_seq=%lld ttl=%d",sizeof(icmp_packet), ipstr, argv[argc - 1], total, ip_hdr->ttl);
+          printf("%ld byte from %s (%s): icmp_seq=%lld ttl=%d",sizeof(icmp_packet), ipstr, argv[argc - 1], total, ip_hdr->ttl);
           delay = time_stamp(time_start, time_end, &total_time);
           printf("\n");
         }

@@ -15,6 +15,7 @@
 #include <regex.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <math.h>
 
 #define DEST_PORT 0
 #define PACKET_SIZE 64
@@ -25,6 +26,8 @@ void            process_end();
 void            signal_handler(int signum);
 void            ft_printOptional(struct addrinfo *res);
 void            ft_rate();
+double          sqrt_newton_raphson(double c);
+
 
 int             validate_domain_name(const char *domainName);
 void	        *ft_memset(void *b, int c, size_t len);

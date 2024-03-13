@@ -18,9 +18,27 @@ void ft_printOptional(struct addrinfo *res){
   }
 }
 
+double sqrt_newton_raphson(double x) {
+    double tolerance = 1e-10; // 오차 범위
+    double guess = x / 2.0;   // 초기 추정값
+    double diff = 1.0;
+
+    // 뉴턴-랩슨 방법을 사용한 반복 계산
+    while (diff > tolerance) {
+        double new_guess = (guess + x / guess) / 2.0;
+        diff = new_guess - guess;
+        if (diff < 0) {
+            diff = -diff; // 절대값 계산
+        }
+        guess = new_guess;
+    }
+
+    return guess;
+}
+
 void ft_rate(){
     unsigned long long rate;
-    double averagesec, averageusec;
+    double averagetime, mdev, dest, min, max;
     struct timeval end;
     int i;
     
@@ -28,24 +46,33 @@ void ft_rate(){
     printf("%llu packets transmitted, %llu packets received, ", total, suc);
     rate = ((total - suc) * 100) / total;
     printf("%llu%% packet loss, ", rate);
-    averagesec = (double)(total_time.tv_sec * 1000000) / suc;
-    averageusec = (double)(total_time.tv_usec) / suc;
+    averagetime = (((double)(total_time.tv_sec * 1000000) / suc)  + ((double)(total_time.tv_usec) / suc)) / 1000;
     time_stamp(program_start, end, NULL);
-    if(save_times && ac == 3 && ft_strcmp(av[1], "-v") == 0){
-      printf("\nrtt = ");
+    printf("\n");
+    min = 1000;
+    max = 0;
+    mdev = 0;
+    if(save_times && ac == 3){
       i = 0;
       while(1){
-        printf("%.2f",save_times[i]);
+        dest = (save_times[i] - averagetime);
+        mdev += (dest * dest);
+        if (min > save_times[i])
+          min = save_times[i];
+        if (max < save_times[i])
+          max = save_times[i];
         i++;
         if ((unsigned long long)i < suc)
-          printf("/");
+          ;
         else
           break;
       }
-      printf ("\naverageRTT : %.2fms", (averagesec + averageusec)/ 1000);
+      mdev /= suc;
+      mdev = sqrt_newton_raphson(mdev);
+      printf ("rtt min/avg/max/mdev : %.3f/%.3f/%.3f/%.3f ms", min, averagetime, max, mdev);
     }
     else if (save_times == NULL && ac == 3 && ft_strcmp(av[1], "-v")){
-      printf("\nrtt = NULL\naverageRTT = NULL");
+      printf("rtt = NULL");
     }
     printf("\n");
 }
