@@ -7,17 +7,6 @@ extern int   closefd, ac;
 extern char  **av;
 extern double *save_times;
 
-void	*ft_memset(void *b, int c, size_t len){
-	size_t			i;
-	unsigned char	*st;
-
-	i = 0;
-	st = (unsigned char *)b;
-	while (i < len)
-		st[i++] = (unsigned char)c;
-	return (st);
-}
-
 int validate_domain_name(const char *domainName) {
     int i;
     int length = strlen(domainName);
@@ -41,6 +30,17 @@ int validate_domain_name(const char *domainName) {
     if (dotCount < 1)
         return 0;
     return 1;
+}
+
+void	*ft_memset(void *b, int c, size_t len){
+	size_t			i;
+	unsigned char	*st;
+
+	i = 0;
+	st = (unsigned char *)b;
+	while (i < len)
+		st[i++] = (unsigned char)c;
+	return (st);
 }
 
 int ft_strcmp(char *str, char *opt){
@@ -67,25 +67,27 @@ int time_stamp(struct timeval start, struct timeval end, struct timeval *total){
 
     value = (end.tv_sec - start.tv_sec) * 1000000;
     value += (end.tv_usec - start.tv_usec);
-    total->tv_sec += value / 1000000;
-    total->tv_usec += value % 1000000;
     ptime = (double)value / 1000;
-    if(total ->tv_usec >= 1000000){
-      total->tv_sec += total->tv_usec / 1000000;
-      total->tv_usec %= 1000000;
+    printf(" time %.2f/ms", ptime);
+    if(total != NULL){
+      total->tv_sec += value / 1000000;
+      total->tv_usec += value % 1000000;
+      if(total ->tv_usec >= 1000000){
+        total->tv_sec += total->tv_usec / 1000000;
+        total->tv_usec %= 1000000;
+      }
+      i = 0;
+      reset = malloc(sizeof(double) * suc);
+      while(i + 1 < suc){
+        reset[i] = save_times[i];
+        i++;
+      }
+      reset[i] = ptime;
+      if (save_times != NULL){
+        free(save_times);
+      }
+      save_times = reset;
     }
-    printf(" RTT : %.2f/ms", ptime);
-    i = 0;
-    reset = malloc(sizeof(double) * suc);
-    while(i + 1 < suc){
-      reset[i] = save_times[i];
-      i++;
-    }
-    reset[i] = ptime;
-    if (save_times != NULL){
-      free(save_times);
-    }
-    save_times = reset;
     return value;
 }
 

@@ -8,7 +8,7 @@ char  **av;
 double *save_times;
 
 int main(int argc, char **argv) {
-  if (argc != 2 && argc != 3) {
+  if ((argc != 2 && argc != 3) || ((argc == 3) && ft_strcmp(argv[1], "-v") != 0)) {
       printf("How to use: %s \"url\" or %s \'-v\' \"url\" \n", argv[0], argv[0]);
       return 1;
   }
@@ -25,10 +25,13 @@ int main(int argc, char **argv) {
     char recv_buffer[PACKET_SIZE];
     struct timeval time_start, time_end, tv;
     char *ipstr;
+    char *ipv6str;
+    int delay;
     
     //init
     {
       ft_memset(&addr, 0, sizeof(addr));
+      addr.ai_family = AF_INET6;
       addr.ai_family = AF_UNSPEC;
       addr.ai_socktype = SOCK_RAW;
       addr.ai_protocol = IPPROTO_ICMP;
@@ -81,31 +84,41 @@ int main(int argc, char **argv) {
         inet_ntop(res->ai_family, &(ipv6->sin6_addr), ipstr6, sizeof ipstr6);
         ipstr = ipstr6;
       }
+      if (ac == 3 && ft_strcmp(av[1], "-v") == 0){
+        char ipstr6[INET6_ADDRSTRLEN];
+        struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)res->ai_addr;
+        inet_ntop(res->ai_family, &(ipv6->sin6_addr), ipstr6, sizeof ipstr6);
+        ipv6str = ipstr6;
+      }
 
       printf("The IP address is: %s\n", ipstr);
     }
     {
       signal(SIGINT, signal_handler);
       fill_icmp_packet(icmp_hdr, 1);
-      printf("--- Ping Start url : %s ---\n", argv[argc - 1]);
+      printf("--- PING %s (%s) %ld(%ld) bytes of data Start ---\n", argv[argc - 1], ipstr, sizeof(msg) ,sizeof(icmp_packet));
       gettimeofday(&program_start, NULL);
       while (1) {
         total++;
+        delay = 0;
         gettimeofday(&time_start, NULL);
         if (sendto(sockfd, icmp_packet, PACKET_SIZE, 0, res->ai_addr, res->ai_addrlen) <= 0) {
         }
         if (recvmsg(sockfd, &msg, 0) <= 0) {
+          delay = 1000000;
         }
         else {
           suc++;
           gettimeofday(&time_end, NULL);
           struct iphdr *ip_hdr = (struct iphdr*)recv_buffer;
-          // printf("%ld byte from %s (%s): icmp_seq=%lld ttl=%d",sizeof(icmp_packet), ipstr, argv[argc - 1], total, ip_hdr->ttl);
-          printf("%ld byte from %s (%s): icmp_seq=%d ttl=%d",sizeof(icmp_packet), ipstr, argv[argc - 1], icmp_hdr->icmp_seq, ip_hdr->ttl);
-          time_stamp(time_start, time_end, &total_time);
+          if (ac == 3 && ft_strcmp(av[1], "-v") == 0)
+            printf("%ld byte from %s (%s): icmp_seq=%lld ttl=%d",sizeof(icmp_packet), ipv6str, ipstr, total, ip_hdr->ttl);
+          else
+            printf("%ld byte from %s (%s): icmp_seq=%lld ttl=%d",sizeof(icmp_packet), ipstr, argv[argc - 1], total, ip_hdr->ttl);
+          delay = time_stamp(time_start, time_end, &total_time);
           printf("\n");
         }
-        usleep(1000000);
+        usleep(1000000 - delay);
       }
       freeaddrinfo(res);
       close(sockfd);
