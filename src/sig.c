@@ -71,7 +71,7 @@ void ft_rate(){
       mdev = sqrt_newton_raphson(mdev);
       printf ("rtt min/avg/max/mdev : %.3f/%.3f/%.3f/%.3f ms", min, averagetime, max, mdev);
     }
-    else if (save_times == NULL && ac == 3 && ft_strcmp(av[1], "-v")){
+    else if (save_times == NULL && ac == 3){
       printf("rtt = NULL");
     }
     printf("\n");
@@ -79,9 +79,8 @@ void ft_rate(){
 
 void process_end(){
     printf("--- %s ping end statistics  ---\n", av[ac - 1]);
-    if (ac == 3 && ft_strcmp(av[1], "-v") == 0){
+    if (ac == 3)
         ft_printOptional(g_res);
-    }
     ft_rate();
     freeaddrinfo(g_res);
     close(closefd);

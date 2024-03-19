@@ -9,15 +9,15 @@ extern double *save_times;
 
 int validate_domain_name(const char *domainName) {
     int i;
-    int length = strlen(domainName);
+    int length = (int)ft_strlen(domainName);
     int dotCount = 0;
 
     if (length < 3 || length > 253)
         return 0;
-    if (!isalnum(domainName[0]) || !isalnum(domainName[length - 1]))
+    if (!ft_isalnum(domainName[0]) || !ft_isalnum(domainName[length - 1]))
         return 0;
     for (i = 0; i < length; i++) {
-        if (isalnum(domainName[i]) || domainName[i] == '-' || domainName[i] == '.') {
+        if (ft_isalnum(domainName[i]) || domainName[i] == '-' || domainName[i] == '.') {
             if (domainName[i] == '.') {
                 dotCount++;
                 if (i > 0 && domainName[i - 1] == '.')

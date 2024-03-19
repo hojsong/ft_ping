@@ -1,1 +1,1 @@
-valgrind --leak-check=full ./ft_ping www.yahoo.co.kr 
+valgrind --leak-check=full ./ft_ping -v www.yahoo.co.kr 

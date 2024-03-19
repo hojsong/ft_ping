@@ -30,7 +30,8 @@ double          sqrt_newton_raphson(double c);
 
 void	        *ft_memset(void *b, int c, size_t len);
 int	            ft_strncmp(const char *s1, const char *s2, size_t n);
-int	            ft_isalnum(int c)
+int	            ft_isalnum(int c);
+size_t	        ft_strlen(char *str);
 
 int             validate_domain_name(const char *domainName);
 int             optional(char *str, char *opt);

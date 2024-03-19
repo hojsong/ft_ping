@@ -7,6 +7,15 @@ extern int   closefd, ac;
 extern char  **av;
 extern double *save_times;
 
+size_t	ft_strlen(char *str){
+	size_t i;
+
+	i = 0;
+	while(str && str[i])
+		i++;
+	return i;
+}
+
 void	*ft_memset(void *b, int c, size_t len){
 	size_t			i;
 	unsigned char	*st;

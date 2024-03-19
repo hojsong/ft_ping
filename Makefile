@@ -2,7 +2,7 @@ CC = cc
 CFLAG = -Wall -Wextra -Werror
 NAME = ft_ping
 HEAD = header/
-SRCS = src/main.c src/util.c src/sig.c
+SRCS = src/main.c src/util.c src/sig.c src/libft.c
 OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)
