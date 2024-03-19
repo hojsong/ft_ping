@@ -5,6 +5,16 @@ HEAD = header/
 SRCS = src/main.c src/util.c src/sig.c src/libft.c
 OBJS = $(SRCS:.c=.o)
 
+OS := $(shell uname)
+
+ifeq ($(OS), Darwin)
+    # macOS
+    SRCS += src/macPrint.c
+else ifeq ($(OS), Linux)
+    # Linux
+    SRCS += src/linuxPrint.c
+endif
+
 all : $(NAME)
 	
 .c.o :

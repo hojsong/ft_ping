@@ -85,8 +85,7 @@ int main(int argc, char **argv) {
     else {
       suc++;
       gettimeofday(&time_end, NULL);
-      struct iphdr *ip_hdr = (struct iphdr*)recv_buffer;
-      printf("%ld byte from %s : icmp_seq=%lld ttl=%d",sizeof(icmp_packet), argv[argc - 1], total, ip_hdr->ttl);
+      ft_print_recvmsg(sizeof(icmp_packet), argv[argc - 1], recv_buffer);
       delay = time_stamp(time_start, time_end, &total_time);
       printf("\n");
     }
