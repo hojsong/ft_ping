@@ -32,33 +32,6 @@ int validate_domain_name(const char *domainName) {
     return 1;
 }
 
-void	*ft_memset(void *b, int c, size_t len){
-	size_t			i;
-	unsigned char	*st;
-
-	i = 0;
-	st = (unsigned char *)b;
-	while (i < len)
-		st[i++] = (unsigned char)c;
-	return (st);
-}
-
-int ft_strcmp(char *str, char *opt){
-    int i;
-
-    if(!opt || !str)
-      return (1);
-    i = 0;
-    while(opt[i] && str[i]){
-        if (opt[i] == str[i])
-          i++;
-        else {
-          return (1);
-        }
-    }
-    return (0);
-}
-
 int time_stamp(struct timeval start, struct timeval end, struct timeval *total){
     int value;
     double ptime;

@@ -28,10 +28,11 @@ void            ft_printOptional(struct addrinfo *res);
 void            ft_rate();
 double          sqrt_newton_raphson(double c);
 
+void	        *ft_memset(void *b, int c, size_t len);
+int	            ft_strncmp(const char *s1, const char *s2, size_t n);
+int	            ft_isalnum(int c)
 
 int             validate_domain_name(const char *domainName);
-void	        *ft_memset(void *b, int c, size_t len);
-int             ft_strcmp(char *str, char *opt);
 int             optional(char *str, char *opt);
 void            fill_icmp_packet(struct icmp *icmp_hdr, int sequence);
 int             time_stamp(struct timeval start, struct timeval end, struct timeval *total);
