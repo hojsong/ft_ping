@@ -24,11 +24,11 @@ int main(int argc, char **argv) {
     struct iovec iov[1];
     char recv_buffer[PACKET_SIZE];
     struct timeval time_start, time_end, tv;
-    char *ipstr;
     int delay;
     
     //init
     {
+      ft_memset(icmp_packet, 0, PACKET_SIZE);
       ft_memset(&addr, 0, sizeof(addr));
       addr.ai_family = AF_UNSPEC;
       addr.ai_socktype = SOCK_RAW;
@@ -71,40 +71,30 @@ int main(int argc, char **argv) {
       g_res = res;
       total = 0;
       suc = 0;
-      if (res->ai_family == AF_INET) {
-        char ipstr4[INET_ADDRSTRLEN];
-        struct sockaddr_in *ipv4 = (struct sockaddr_in *)res->ai_addr;
-        inet_ntop(res->ai_family, &(ipv4->sin_addr), ipstr4, sizeof ipstr4);
-        ipstr = ipstr4;
-      } else if (res->ai_family == AF_INET6) {
-        char ipstr6[INET6_ADDRSTRLEN];
-        struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)res->ai_addr;
-        inet_ntop(res->ai_family, &(ipv6->sin6_addr), ipstr6, sizeof ipstr6);
-        ipstr = ipstr6;
-      }
-
-
-      printf("The IP address is: %s\n", ipstr);
     }
     {
       signal(SIGINT, signal_handler);
       fill_icmp_packet(icmp_hdr, 1);
-      printf("--- PING %s (%s) %ld(%ld) bytes of data Start ---\n", argv[argc - 1], ipstr, sizeof(msg) ,sizeof(icmp_packet));
+      printf("--- PING %s %ld(%ld) bytes of data Start ---\n", argv[argc - 1], sizeof(msg) ,sizeof(icmp_packet));
       gettimeofday(&program_start, NULL);
       while (1) {
         total++;
         delay = 0;
         gettimeofday(&time_start, NULL);
         if (sendto(sockfd, icmp_packet, PACKET_SIZE, 0, res->ai_addr, res->ai_addrlen) <= 0) {
+          if (argc == 3)
+            printf("Packet Send Error\n");
         }
         if (recvmsg(sockfd, &msg, 0) <= 0) {
+          if (argc == 3)
+            printf("Recv Time Out\n");
           delay = 1000000;
         }
         else {
           suc++;
           gettimeofday(&time_end, NULL);
           struct iphdr *ip_hdr = (struct iphdr*)recv_buffer;
-          printf("%ld byte from %s (%s): icmp_seq=%lld ttl=%d",sizeof(icmp_packet), ipstr, argv[argc - 1], total, ip_hdr->ttl);
+          printf("%ld byte from %s : icmp_seq=%lld ttl=%d",sizeof(icmp_packet), argv[argc - 1], total, ip_hdr->ttl);
           delay = time_stamp(time_start, time_end, &total_time);
           printf("\n");
         }

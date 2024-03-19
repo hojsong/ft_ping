@@ -84,6 +84,9 @@ void process_end(){
     }
     ft_rate();
     freeaddrinfo(g_res);
+    close(closefd);
+    if(save_times != NULL)
+      free(save_times);
     exit(0);
 }
 

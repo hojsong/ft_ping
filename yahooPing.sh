@@ -1,0 +1,1 @@
+valgrind --leak-check=full ./ft_ping www.yahoo.co.kr 

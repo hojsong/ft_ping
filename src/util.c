@@ -96,7 +96,7 @@ void fill_icmp_packet(struct icmp *icmp_hdr, int sequence) {
     icmp_hdr->icmp_code = 0;
     icmp_hdr->icmp_id = htons(getpid());
     icmp_hdr->icmp_seq = htons(sequence);
-    memset(icmp_hdr->icmp_data, 0xA5, PACKET_SIZE - sizeof(struct icmp));
+    ft_memset(icmp_hdr->icmp_data, 0xA5, PACKET_SIZE - sizeof(struct icmp));
     gettimeofday((struct timeval *)icmp_hdr->icmp_data, NULL);
     icmp_hdr->icmp_cksum = 0;
     icmp_hdr->icmp_cksum = checksum((unsigned short *)icmp_hdr, PACKET_SIZE);
