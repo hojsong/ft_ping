@@ -6,9 +6,8 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#ifdef __linux__
-    #include <netinet/ip.h> // Linux에서 사용
-#elif defined(__APPLE__) && defined(__MACH__)
+#include <netinet/ip.h>
+#ifdef __APPLE__
     #include <netinet/ip_var.h> // macOS에서 사용할 수 있는 헤더
 #endif
 #include <netinet/ip_icmp.h>
@@ -17,9 +16,7 @@
 #include <signal.h>
 #include <netdb.h>
 #include <regex.h>
-#include <stdio.h>
 #include <ctype.h>
-#include <math.h>
 
 #define DEST_PORT 0
 #define PACKET_SIZE 64
