@@ -5,11 +5,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 #ifdef __linux__
     #include <netinet/ip.h> // Linux에서 사용
 #elif defined(__APPLE__) && defined(__MACH__)
-    #include <netinet/in.h> // macOS에서 사용할 수 있는 헤더
-    #include <netinet/ip_var.h>
+    #include <netinet/ip_var.h> // macOS에서 사용할 수 있는 헤더
 #endif
 #include <netinet/ip_icmp.h>
 #include <arpa/inet.h>

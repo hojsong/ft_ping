@@ -1,7 +1,7 @@
 CC = cc
 CFLAG = -Wall -Wextra -Werror
 NAME = ft_ping
-HEAD = header/
+HEAD = header/ft_ping.h
 SRCS = src/main.c src/util.c src/sig.c src/libft.c
 OBJS = $(SRCS:.c=.o)
 
@@ -15,13 +15,13 @@ else ifeq ($(OS), Linux)
     SRCS += src/linuxPrint.c
 endif
 
-all : $(NAME)
+all : $(NAME) $(HEAD)
 	
-.c.o :
+.c.o : $(HEAD)
 	$(CC) $(CFLAG) -I $(HEAD) -c $< -o $@ 
 
-$(NAME) : $(OBJS)
-	$(CC) $(CFLAG) -o $(NAME) $(OBJS)
+$(NAME) : $(OBJS) $(HEAD)
+	$(CC) $(CFLAG) -I $(HEAD) -o $(NAME) $(OBJS)
 
 clean :
 	rm -rf $(OBJS)
