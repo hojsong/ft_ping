@@ -69,6 +69,7 @@ This README.md file now includes the additional information about testing with D
 
 
 kr -------------------------------------------------------------------
+
 ft_ping
 ft_ping 프로젝트는 ping 명령어의 사용자 정의 구현입니다. ping은 인터넷 프로토콜(IP) 네트워크에서 호스트의 도달 가능성을 테스트하는 데 널리 사용됩니다. 이 프로젝트는 42 School 커리큘럼의 일부로, 학생들이 네트워크 프로그래밍과 시스템 함수의 기초를 이해하도록 돕기 위해 설계되었습니다.
 설명
